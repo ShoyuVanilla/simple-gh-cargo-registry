@@ -101,12 +101,17 @@ else
 		jq -r '.packages[0] | "\(.name)\t\(.version)"')
 fi
 
-cargo package --target-dir "$crate_out_dir" "${cargo_opts[@]}" "${pkg_opts[@]}"
-crate_dst="${index_root%/}/_crates/${name}/${version}"
-mkdir -p "$crate_dst"
+git switch -c crates
 
+git checkout main
+cargo package --target-dir "$crate_out_dir" "${cargo_opts[@]}" "${pkg_opts[@]}"
 crate_path="${crate_out_dir%/}/package/${name}-${version}.crate"
+cargo index add --index "$index_root" --index-url "$index_url" --crate "$crate_path"
+commit_msg=$(git log -1 --pretty=%B)
+
+git checkout crates
+crate_dst="${index_root%/}/crates/${name}/${version}"
+mkdir -p "$crate_dst"
 cp "$crate_path" "${crate_dst%/}/download"
 git add "$crate_dst"
-
-cargo index add --index "$index_root" --index-url "$index_url" --crate "$crate_path"
+git commit -m "$commit_msg"

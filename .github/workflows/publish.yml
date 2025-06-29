@@ -63,4 +63,4 @@ jobs:
 
           ./_scripts/publish.sh "${args[@]}"
 
-          git push
+          git push origin main crates
