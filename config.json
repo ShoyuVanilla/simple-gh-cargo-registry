@@ -1,0 +1,4 @@
+{
+  "dl": "https://raw.githubusercontent.com/<USER>/<REPO>/<BRANCH>/_crates/{crate}/{version}/download",
+  "auth-required": true
+}
